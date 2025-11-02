@@ -1,43 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Admin Login — Attendance</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Employee Attendance</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 400px;
+      margin-top: 100px;
+      text-align: center;
+    }
+
+    .role-select {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .role-select button {
+      width: 48%;
+      background: rgba(255,255,255,0.08);
+      color: #00ffc8;
+      border: 1px solid #00ffc8;
+    }
+
+    .role-select button.active {
+      background: linear-gradient(90deg, #00ffc8, #0075ff);
+      color: #000;
+    }
+  </style>
 </head>
 <body>
-  <div class="container" style="max-width:420px">
-    <h1>Admin Login</h1>
-    <form id="form">
-      <label>Username</label>
-      <input id="username" type="text" placeholder="admin" />
-      <label>Password</label>
-      <input id="password" type="password" placeholder="••••••" />
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button class="btn" type="submit">Login</button>
-       
-      </div>
+  <div class="container">
+    <h1>Login Portal</h1>
+
+    <div class="role-select">
+      <button id="adminBtn" class="active">Admin</button>
+      <button id="empBtn">Employee</button>
+    </div>
+
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" required />
+
+      <button type="submit">Login</button>
     </form>
-    <p id="msg" style="margin-top:12px"></p>
+
+    <p id="loginMsg" style="color:#00ffc8; font-weight:600; display:none;"></p>
   </div>
 
   <script>
-    // Change admin credentials if needed
-    const adminCred = { user: 'admin', pass: 'admin123' };
+    let role = "admin"; // default
 
-    document.getElementById('form').addEventListener('submit', function(e){
+    const adminBtn = document.getElementById("adminBtn");
+    const empBtn = document.getElementById("empBtn");
+
+    adminBtn.addEventListener("click", () => {
+      role = "admin";
+      adminBtn.classList.add("active");
+      empBtn.classList.remove("active");
+    });
+
+    empBtn.addEventListener("click", () => {
+      role = "employee";
+      empBtn.classList.add("active");
+      adminBtn.classList.remove("active");
+    });
+
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("loginMsg");
+
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value.trim();
-      const msg = document.getElementById('msg');
 
-      if(u === adminCred.user && p === adminCred.pass){
-        localStorage.setItem('adminLogged','true');
-        window.location.href = 'admin-portal.html';
-      } else {
-        msg.style.color = 'red';
-        msg.innerText = 'Invalid admin credentials';
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // Define login credentials
+      const adminUser = { user: "admin", pass: "admin123" };
+      const employeeUser = { user: "employee", pass: "emp123" };
+
+      let isValid = false;
+
+      if (role === "admin" && username === adminUser.user && password === adminUser.pass) {
+        isValid = true;
+        localStorage.setItem("loggedRole", "admin");
+        window.location.href = "C:\Users\DELL\Desktop\ARTIFY  Attendance\admi\admin-portal.html";
+      } 
+      else if (role === "employee" && username === employeeUser.user && password === employeeUser.pass) {
+        isValid = true;
+        localStorage.setItem("loggedRole", "employee");
+        window.location.href = "C:\Users\DELL\Desktop\ARTIFY  Attendance\Mark Attendance\employee-mark.html";
+      }
+
+      if (!isValid) {
+        msg.textContent = "❌ Invalid credentials. Try again.";
+        msg.style.display = "block";
+        setTimeout(() => msg.style.display = "none", 3000);
       }
     });
   </script>
